@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+<멋사 week5 개념과제>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+* React에서 component를 선언하는 방법에는 2가지가 있다.
+1. 클래스형 컴포넌트
+2. 함수형 컴포넌트
 
-In the project directory, you can run:
+* 클래스형 컴포넌트
+state, lifeCycle 관련 기능 사용이 가능하다.
+메모리 자원을 함수형 컴포넌트보다 조금 더 사용한다.
+임의의 메소드를 정의할 수 있다.
+this.props를 통해 값을 불러올 수 있다.
+클래스형은 선언 시에 class 키워드가 필요하고, component로 상속을 받아야 하며 render()메소드가 반드시 있어야 한다.
 
-### `npm start`
+* 함수형 컴포넌트
+state, lifeCycle 관련 기능 사용이 불가능 했지만 hook을 통해 해결 가능하다.
+메모리 자원을 함수형보다 덜 사용한다.
+컴포넌트 선언이 편하다.
+props를 불러올 필요없이 바로 호출 가능하다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+*state에서의 차이
+컴포넌트 내부에서 바뀔 수 있는 값을 말한다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 클래스형
+ 1. 객체 형식
+ 2. constructor 안에서 this.state로 초기 값 설정이 가능하고, constructor없어도 바로 설정 가능함
+ 3. this.setState함수로 변경 가능
 
-### `npm test`
+- 함수형
+  1. useState 함수로 state를 사용한다. (배열이 반환되는데 첫 번째 원소는 현재 상태, 두번째 함수는 상태를 바꾸어 주는 함수이다.)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+* 이벤트 핸들링에서의 차이
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 함수형
+  const키워드 + 함수 형태로 선언 해야한다.
+  요소에서 적용하기 위해서는 this가 필요없다.
+  
+- 클래스형
+  함수 선언시 =>로 바로 선언 가능하다.
+  요소에서 적용하기 위해서는 this를 붙여야 한다.
+  
+* 함수형 컴포넌트를 선호하는 이유
+클래스 컴포넌트보다 함수형 컴포넌트+Hook을 더 많이 사용한다.
+클래스 컴포넌트는 로직과 상태를 컴포넌트 내에서 구현하기 때문에 상대적으로 복잡한 UI로직을 갖고 있는 반면,
+함수형 컴포넌트는 state를 사용하지 않고, 단순하게 데이터를 받아서(props) UI에 뿌려준다.
+hook들을 필요한 곳에 사용하며 로직의 재사용이 가능하다는 장점 또한 있다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* react의 DOM 수정방법
+react는 마운팅, 언마운팅, 업데이팅 3가지를 사용한다.
+마운팅은 React Node를 DOM에 더하는 것이다.
+언마운팅은 React Node가 DOM에서 제거되는 것이다.
+업데이팅은 이미 DOM에 추가된 React Node의 data가 바뀌는 것이다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+최적화를 하기 위해서는 리렌더링하는 횟수를 줄이면 된다.
 
-### `npm run eject`
+* 렌더링
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+렌더링은 다음과 같은 4가지 상황에서 발생한다.
+1. props가 바뀔 때
+2. state가 바뀔 때
+3. 부모 컴포넌트가 리렌더링 할 때
+4. this.forceUpdate로 강제로 렌더링을 트리거할 때
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+상위의 컴포넌트에 변화가 일어나면 하위 컴포넌트에도 렌더링을 명령하게 된다. 따라서 용량이 큰 작업을 하게 되면
+사소한 변경에 모든 컴포넌트가 렌더링을 행하기 때문에 성능저하를 일으킬 수 있다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+따라서 리렌더링을 줄이려면, props, state 또는 context value의 변경을 줄이거나, 부모 컴포넌트의 리렌더링을 줄이면 된다.
+대부분의 최적화는 props를 줄이는 방법을 쓴다. (불변객체를 쓰거나 useMemo, useCallback을 사용하는 방법)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* 마운트
+ 마운트는 컴포넌트가 화면에 나타나는 것을 의미한다. 반대로 언마운트는 화면에서 삭제되는 것을 의미한다.
+ 
+ 마운팅은 다음과 같은 상황에서 일어난다.
+ 1. props로 받은 값을 컴포넌트의 state로 설정할 때
+ 2. 컴포넌트가 나타나면 외부 API를 요청해야 할 ㅏ때
+ 3. 라이브러리를 사용할 때
+ 4. setInterval이나 setTimeout과 같은 작업
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+따라서 컴포넌트가 mount 되는 것과 render되는 것은 다르다. 맨 처음 컴포넌트가 render될 때는 mount되지만 다시 props나, state가 변경 되어
+rerender 할 때는 mount가 되지 않는다.
